@@ -23,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable}`} suppressHydrationWarning>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider enableSystem={false} defaultTheme="light">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
