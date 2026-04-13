@@ -3,9 +3,9 @@ import { Manrope, Inter } from 'next/font/google';
 import './globals.css';
 import '../styles/_typography.sass';
 import { ThemeProvider } from 'next-themes';
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -24,7 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(manrope.variable, "font-sans", inter.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn(manrope.variable, 'font-sans', inter.variable)}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider enableSystem={false} defaultTheme="light">
           {children}

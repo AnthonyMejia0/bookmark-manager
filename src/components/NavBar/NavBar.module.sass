@@ -9,14 +9,14 @@
     gap: 10px
     height: 65px
     padding: 12px 16px
-    width: 100%
+    width: 100%vw
 
     +tablet
         height: 78px
 
 .menuButton
     background: none
-    border: 1px solid var(--neutral-400)
+    border: 2px solid var(--neutral-400)
     border-radius: 8px
     cursor: pointer
     display: flex
@@ -64,7 +64,7 @@
 
 .input
     background-color: var(--form-bg)
-    border: 1px solid var(--form-border)
+    border: 2px solid var(--nav-bg-border)
     border-radius: 8px
     color: var(--secondary-text-color)
     height: 100%
@@ -95,6 +95,118 @@
     align-items: center
     background: none
     border: none
+    border-radius: 50%
     cursor: pointer
     display: flex
     justify-content: center
+    outline: 2px solid transparent
+    outline-offset: 2px
+
+    &:hover
+        outline-color: var(--focus-outline)
+
+    &[data-state="open"]
+        outline-color: var(--focus-outline)
+
+.userInfo
+    display: flex
+    flex-direction: row
+    gap: 12px
+    overflow: hidden
+    padding-inline: 16px
+    width: 100%
+
+    &Details
+        flex: 1
+        max-width: 90%
+
+        &Text
+            text-overflow: ellipsis
+            width: 100%
+
+            &Primary
+                color: var(--primary-text-color)
+
+            &Secondary
+                color: var(--secondary-text-color)
+
+.menu
+    background-color: var(--form-bg)
+    border: 1px solid var(--form-bg-hover)
+
+.themeSetting
+    align-items: center
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    padding-inline: 16px
+
+    &Label
+        align-items: center
+        color: var(--secondary-text-color)
+        display: flex
+        flex-direction: row
+        gap: 5px
+
+.divider
+    background-color: var(--form-bg-hover)
+    height: 2px
+    margin: 12px 0
+
+.switch
+  width: 40px
+  height: 40px
+  border-radius: 8px
+  background: var(--form-bg)
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &[data-state="checked"]
+    background: var(--teal-700)
+
+.paletteIcon
+    color: var(--secondary-text-color)
+
+.themeIcons
+    color: var(--primary-text-color)
+
+.menuIcon
+    color: var(--primary-text-color)
+
+.addIcon
+    color: var(--neutral-0)
+
+.themeButton
+    align-items: center
+    background-color: var(--nav-bg-border)
+    border-radius: 4px
+    cursor: pointer
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    height: 30px
+    padding: 2px
+    width: 64px
+
+    &Select
+        align-items: center
+        background-color: var(--nav-bg-border)
+        border-radius: 4px
+        display: flex
+        justify-content: center
+        height: 100%
+        width: 30px
+
+        &Selected
+            background-color: var(--form-bg)
+
+.logout
+    align-items: center
+    cursor: pointer
+    display: flex
+    flex-direction: row
+    gap: 10px
+    justify-content: start
+    padding-inline: 16px
+    width: 100%
