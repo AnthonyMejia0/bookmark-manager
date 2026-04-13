@@ -13,6 +13,10 @@
 
   --primary-text-color: var(--neutral-900);
   --secondary-text-color: var(--neutral-800);
+  --background-color: var(--neutral-100);
+
+  --nav-bg: var(--neutral-0);
+  --nav-bg-border: var(--neutral-300);
   --form-bg: var(--neutral-0);
   --form-bg-hover: var(--neutral-100);
   --form-border: var(--neutral-500);
@@ -33,7 +37,10 @@
 
   --primary-text-color: var(--neutral-0);
   --secondary-text-color: var(--neutral-100);
+  --background-color: var(--neutral-900);
 
+  --nav-bg: var(--neutral-800);
+  --nav-bg-border: var(--neutral-500);
   --form-bg: var(--neutral-600);
   --form-bg-hover: var(--neutral-500);
   --form-border: var(--neutral-300);
@@ -56,7 +63,7 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--neutral-100);
+  background: var(--background-color);
   font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
