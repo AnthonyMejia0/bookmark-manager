@@ -31,6 +31,7 @@
   --form-error: var(--red-800);
   --tag-number: var(--neutral-300);
   --tag-number-text: var(--neutral-800);
+  --archive-bg: var(--neutral-300);
 }
 
 [data-theme='dark'] {
@@ -57,6 +58,7 @@
   --form-error: var(--red-600);
   --tag-number: var(--neutral-400);
   --tag-number-text: var(--neutral-0);
+  --archive-bg: var(--neutral-600);
 }
 
 *,

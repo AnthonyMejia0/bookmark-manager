@@ -1,16 +1,160 @@
+@use '@/styles/_mixins' as *
+
 .dashboardContainer
     background-color: inherit
     display: flex
     flex-direction: row
     height: 100vh
     overflow: hidden
+    position: relative
     width: 100vw
 
-.sidebar
-    height: 100%
-    position: relative
-    width: 296px
+    &Backdrop
+        background-color: rgba(13, 13, 13, 0.7)
+        height: 100vh
+        left: 0
+        position: absolute
+        top: 0
+        width: 100vw
+        z-index: 5
 
-.mainSection
+        +desktop
+            display: none
+
+// .sidebar
+//     display: none
+
+//     &Open
+//         display: inline-block
+//         height: 100%
+//         position: fixed
+//         width: 296px
+//         z-index: 10
+
+//         +desktop
+//             position: static
+
+//     +desktop
+//         display: inline-block
+//         height: 100%
+//         width: 296px
+
+.sidebar
+    position: fixed
+    top: 0
+    left: 0
+    height: 100%
+    width: 296px
+    z-index: 10
+    transform: translateX(-100%)
+    transition: transform 0.3s ease
+
+    &Open
+        transform: translateX(0)
+
+    +desktop
+        position: static
+        transform: none
+        transition: none
+
+.mainContainer
+    display: flex
+    flex-direction: column
     flex: 1
     height: 100%
+    min-height: 0
+
+.mainSection
+    display: flex
+    flex: 1
+    flex-direction: column
+    justify-content: start
+    min-height: 0
+    padding-inline: 16px
+    padding-top: 16px
+
+    &Title
+        align-items: center
+        display: flex
+        flex-direction: row
+        flex-shrink: 0
+        gap: 8px
+        justify-content: space-between
+        height: max-content
+        overflow: hidden
+        width: 100%
+
+    &Header
+        flex: 1
+        font-family: var(--font-manrope)
+        font-size: 20px
+        font-weight: bold
+        line-height: 120%
+        letter-spacing: 0
+
+        &Tags
+            color: var(--focus-outline)
+
+        +tablet
+            font-size: 24px
+            line-height: 140%
+
+    &Sort
+        align-items: center
+        background-color: var(--nav-bg)
+        border: 1px solid var(--neutral-400)
+        border-radius: 6px
+        color: var(--primary-text-color)
+        cursor: pointer
+        display: flex
+        flex-direction: row
+        gap: 6px
+        padding: 10px 12px
+        width: max-content
+
+        &:hover
+            background-color: var(--sidebar-button-hover)
+
+        &Icon
+            color: inherit
+
+    +tablet
+        padding-inline: 32px
+        padding-top: 32px
+
+    &Bookmarks
+        align-items: center
+        display: flex
+        flex-direction: column
+        flex: 1
+        gap: 32px
+        justify-content: start
+        min-height: 0
+        overflow-y: scroll
+        padding: 20px 0
+        width: 100%
+
+        +tablet
+            align-items: start
+            flex-direction: row
+            flex-wrap: wrap
+
+.menu
+    background-color: var(--nav-bg)
+    border: 1px solid var(--form-bg-hover)
+
+    &Option
+        align-items: center
+        color: var(--secondary-text-color)
+        cursor: pointer
+        display: flex
+        flex-direction: row
+        justify-content: space-between
+        padding: 8px 16px
+        width: 100%
+
+        &:hover
+            background-color: var(--sidebar-button-hover)
+
+        &Icon
+            color: inherit

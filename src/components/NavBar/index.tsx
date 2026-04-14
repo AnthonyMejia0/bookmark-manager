@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import styles from './NavBar.module.sass';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +16,14 @@ import { Separator } from '../ui/separator';
 import { LogOut, Menu, Moon, Palette, Plus, Search, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-function NavBar() {
+type NavBarProps = {
+  searchInput: string;
+  setSearchInput: Dispatch<SetStateAction<string>>;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+function NavBar({ searchInput, setSearchInput, setSidebarOpen }: NavBarProps) {
   const [user, setUser] = useState<User | null>(null);
-  const [searchInput, setSearchInput] = useState('');
   const { theme, setTheme } = useTheme();
   const supabase = getSupabaseBrowserClient();
   const router = useRouter();
@@ -68,7 +73,10 @@ function NavBar() {
 
   return (
     <div className={styles.navContainer}>
-      <button className={`${styles.menuButton} ${styles.menuButtonLeft}`}>
+      <button
+        className={`${styles.menuButton} ${styles.menuButtonLeft}`}
+        onClick={() => setSidebarOpen(true)}
+      >
         <Menu height={20} width={20} className={styles.menuIcon} />
       </button>
 

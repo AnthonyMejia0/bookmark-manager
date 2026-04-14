@@ -1,3 +1,5 @@
+@use '@/styles/_mixins' as *
+
 .sidebarContainer
     background-color: var(--nav-bg)
     border: 1px solid var(--nav-bg-border)
@@ -6,7 +8,24 @@
     justify-content: start
     height: 100%
     padding: 20px 16px
+    position: relative
     width: 100%
+
+    &Close
+        align-items: center
+        display: flex
+        justify-content: center
+        height: 32px
+        position: absolute
+        right: 6px
+        top: 6px
+        width: 32px
+
+        &Icon
+            color: var(--primary-text-color)
+        
+        +desktop
+            display: none
 
 .sidebarNav
     margin-top: 26px

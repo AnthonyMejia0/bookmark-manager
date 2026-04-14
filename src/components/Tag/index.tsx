@@ -27,6 +27,7 @@ function Tag({ tag, toggleTag }: TagProps) {
             className={styles.checkbox}
             checked={checked}
             onCheckedChange={handleChecked}
+            style={{ cursor: 'pointer' }}
           />
           <FieldLabel className={`text-preset-3 ${styles.checkboxLabel}`}>
             {tag.name}

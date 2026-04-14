@@ -4,10 +4,14 @@ import { Bookmark } from '@/types/bookmark';
 import { Tag } from '@/types/tag';
 import { useEffect, useMemo, useState } from 'react';
 
+type SortTypes = 'recently added' | 'recently visited' | 'most visited';
+
 export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [sortBy, setSortBy] = useState<SortTypes>('recently added');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,24 +35,45 @@ export function useBookmarks() {
     fetchData();
   }, []);
 
-  // -------------------------
-  // FILTER BOOKMARKS
-  // -------------------------
   const filteredBookmarks = useMemo(() => {
-    let filtered = bookmarks;
+    let result = [...bookmarks];
 
-    // remove archived
-    filtered = filtered.filter((b) => !b.isArchived);
-
-    // tag filtering (OR logic)
     if (selectedTags.length > 0) {
-      filtered = filtered.filter((b) =>
+      result = result.filter((b) =>
         b.tags.some((tag) => selectedTags.includes(tag)),
       );
     }
 
-    return filtered;
-  }, [bookmarks, selectedTags]);
+    if (searchInput) {
+      result = result.filter((b) => {
+        let lowerB = b.title.toLowerCase();
+        return lowerB.startsWith(searchInput.toLowerCase());
+      });
+    }
+
+    switch (sortBy) {
+      case 'recently added':
+        result.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        break;
+
+      case 'recently visited':
+        result.sort(
+          (a, b) =>
+            new Date(b.lastVisited ?? 0).getTime() -
+            new Date(a.lastVisited ?? 0).getTime(),
+        );
+        break;
+
+      case 'most visited':
+        result.sort((a, b) => (b.visitCount ?? 0) - (a.visitCount ?? 0));
+        break;
+    }
+
+    return result;
+  }, [bookmarks, selectedTags, sortBy, searchInput]);
 
   // -------------------------
   // TOGGLE TAG
@@ -69,6 +94,10 @@ export function useBookmarks() {
     tags,
     selectedTags,
     setSelectedTags,
+    searchInput,
+    setSearchInput,
+    sortBy,
+    setSortBy,
     toggleTag,
     clearTags,
     filteredBookmarks,
