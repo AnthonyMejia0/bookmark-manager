@@ -6,8 +6,8 @@ export type Bookmark = {
   description: string;
   tags: string[];
   pinned: boolean;
-  isArchived: boolean;
-  visitCount: number;
-  createdAt: string;
-  lastVisited: string | null;
+  archived: boolean;
+  visit_count: number;
+  created_at: string;
+  last_visited: string | null;
 };

@@ -33,7 +33,7 @@ type BookmarkComponentProps = {
 
 function Bookmark({ bookmark }: BookmarkComponentProps) {
   const formatDate = (date: string | null) => {
-    if (!date) return null;
+    if (!date) return 'Never';
 
     return new Date(date).toLocaleDateString('en-GB', {
       day: 'numeric',
@@ -46,9 +46,11 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
       <div className={styles.bookmarkContainerTop}>
         <div className={styles.bookmarkContainerTopHeader}>
           <div className={styles.bookmarkContainerTopHeaderIcon}>
-            {bookmark?.favicon && (
+            {bookmark?.url && (
               <Image
-                src={bookmark?.favicon}
+                src={`https://www.google.com/s2/favicons?domain=${
+                  new URL(bookmark?.url).hostname
+                }&sz=64`}
                 alt="Bookmark Icon"
                 height={28}
                 width={28}
@@ -67,7 +69,8 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 // TODO - Handle updating visitCount and lastVisited
                 onClick={() => console.log('link clicked')}
               >
-                {bookmark?.url.replace(/^https?:\/\//, '')}
+                {/* {bookmark?.url.replace(/^https?:\/\//, '')} */}
+                {new URL(bookmark?.url).hostname}
               </p>
             )}
           </div>
@@ -117,7 +120,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                   />
                   Copy URL
                 </DropdownMenuItem>
-                {!bookmark?.isArchived && (
+                {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
                     onClick={() => {}}
@@ -133,7 +136,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                     {bookmark?.pinned ? 'Unpin' : 'pin'}
                   </DropdownMenuItem>
                 )}
-                {!bookmark?.isArchived && (
+                {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
                     onClick={() => {}}
@@ -146,7 +149,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                     Edit
                   </DropdownMenuItem>
                 )}
-                {!bookmark?.isArchived && (
+                {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
                     onClick={() => {}}
@@ -159,7 +162,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                     Archive
                   </DropdownMenuItem>
                 )}
-                {bookmark?.isArchived && (
+                {bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
                     onClick={() => {}}
@@ -172,7 +175,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                     Unarchive
                   </DropdownMenuItem>
                 )}
-                {bookmark?.isArchived && (
+                {bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
                     onClick={() => {}}
@@ -198,16 +201,16 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
           </p>
         </div>
         <div className={styles.bookmarkContainerTopContentTags}>
-          {bookmark?.tags.map((t, i) => (
+          {/* {bookmark?.tags.map((t, i) => (
             <BookmarkTag key={i} label={t} />
-          ))}
+          ))} */}
         </div>
       </div>
       <Separator className={styles.divider} />
       <div className={styles.bookmarkContainerBottom}>
-        <Stat icon={Eye} label={`${bookmark?.visitCount}`} />
-        <Stat icon={Clock} label={formatDate(bookmark?.lastVisited)} />
-        <Stat icon={Calendar} label={formatDate(bookmark?.createdAt)} />
+        <Stat icon={Eye} label={`${bookmark?.visit_count}`} />
+        <Stat icon={Clock} label={formatDate(bookmark?.last_visited)} />
+        <Stat icon={Calendar} label={formatDate(bookmark?.created_at)} />
         {bookmark?.pinned && (
           <Pin
             height={16}
@@ -215,7 +218,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
             className={styles.bookmarkContainerBottomPin}
           />
         )}
-        {bookmark?.isArchived && (
+        {bookmark?.archived && (
           <p
             className={`text-preset-5 ${styles.bookmarkContainerBottomArchived}`}
           >

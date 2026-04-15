@@ -84,9 +84,10 @@ function SideBar({
       </div>
 
       <div className={styles.sidebarTags}>
-        {tags?.map((tag, i) => (
-          <Tag key={i} tag={tag} toggleTag={toggleTag}></Tag>
-        ))}
+        {Array.isArray(tags) &&
+          tags?.map((tag, i) => (
+            <Tag key={i} tag={tag} toggleTag={toggleTag}></Tag>
+          ))}
       </div>
     </div>
   );

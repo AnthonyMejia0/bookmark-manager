@@ -144,9 +144,10 @@ function Dashboard() {
             </DropdownMenu>
           </div>
           <main className={styles.mainSectionBookmarks}>
-            {filteredBookmarks?.map((bookmark, i) => (
-              <Bookmark key={i} bookmark={bookmark} />
-            ))}
+            {Array.isArray(filteredBookmarks) &&
+              filteredBookmarks?.map((bookmark, i) => (
+                <Bookmark key={i} bookmark={bookmark} />
+              ))}
           </main>
         </div>
       </div>

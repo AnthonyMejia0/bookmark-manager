@@ -1,19 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getBookmarks } from '@/lib/bookmarks';
+import { createSupabaseServerClient } from '@/lib/supabase/server-client';
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const tagsParam = searchParams.get('tags');
-
-  let bookmarks = getBookmarks();
-
-  if (tagsParam) {
-    const selectedTags = tagsParam.split(',');
-
-    bookmarks = bookmarks.filter((b) =>
-      b.tags.some((tag) => selectedTags.includes(tag)),
-    );
-  }
+export async function GET() {
+  const supabase = await createSupabaseServerClient();
+  let bookmarks = await getBookmarks(supabase);
 
   return NextResponse.json({ bookmarks });
 }
+
+export async function POST(req: Request) {}

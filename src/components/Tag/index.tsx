@@ -14,6 +14,13 @@ type TagProps = {
 function Tag({ tag, toggleTag }: TagProps) {
   const [checked, setChecked] = useState(false);
 
+  function formatTagName(tag: string) {
+    return tag
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
   const handleChecked = () => {
     setChecked(!checked);
     toggleTag(tag.name);
@@ -30,7 +37,7 @@ function Tag({ tag, toggleTag }: TagProps) {
             style={{ cursor: 'pointer' }}
           />
           <FieldLabel className={`text-preset-3 ${styles.checkboxLabel}`}>
-            {tag.name}
+            {formatTagName(tag?.name)}
           </FieldLabel>
         </Field>
       </FieldGroup>

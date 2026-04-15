@@ -123,21 +123,15 @@
         padding-top: 32px
 
     &Bookmarks
-        align-items: center
-        display: flex
-        flex-direction: column
-        flex: 1
+        display: grid
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
         gap: 32px
-        justify-content: start
+        flex: 1
         min-height: 0
-        overflow-y: scroll
+        overflow-y: auto
         padding: 20px 0
         width: 100%
-
-        +tablet
-            align-items: start
-            flex-direction: row
-            flex-wrap: wrap
+        justify-items: start
 
 .menu
     background-color: var(--nav-bg)

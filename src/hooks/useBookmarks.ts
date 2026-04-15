@@ -16,6 +16,7 @@ export function useBookmarks() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('Fetch CALLED!!!!');
       try {
         setLoading(true);
 
@@ -38,7 +39,7 @@ export function useBookmarks() {
   const filteredBookmarks = useMemo(() => {
     let result = [...bookmarks];
 
-    if (selectedTags.length > 0) {
+    if (selectedTags.length > 0 && !searchInput) {
       result = result.filter((b) =>
         b.tags.some((tag) => selectedTags.includes(tag)),
       );
@@ -55,20 +56,20 @@ export function useBookmarks() {
       case 'recently added':
         result.sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
         break;
 
       case 'recently visited':
         result.sort(
           (a, b) =>
-            new Date(b.lastVisited ?? 0).getTime() -
-            new Date(a.lastVisited ?? 0).getTime(),
+            new Date(b.last_visited ?? 0).getTime() -
+            new Date(a.last_visited ?? 0).getTime(),
         );
         break;
 
       case 'most visited':
-        result.sort((a, b) => (b.visitCount ?? 0) - (a.visitCount ?? 0));
+        result.sort((a, b) => (b.visit_count ?? 0) - (a.visit_count ?? 0));
         break;
     }
 
