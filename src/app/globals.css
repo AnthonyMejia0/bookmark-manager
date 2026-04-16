@@ -2,8 +2,6 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-/* @custom-variant dark (&:is(.dark *)); */
-
 :root {
   --neutral-900: #051513;
   --neutral-800: #4c5c59;
@@ -32,6 +30,7 @@
   --tag-number: var(--neutral-300);
   --tag-number-text: var(--neutral-800);
   --archive-bg: var(--neutral-300);
+  --dialog-close-border: var(--neutral-400);
 }
 
 [data-theme='dark'] {
@@ -59,6 +58,7 @@
   --tag-number: var(--neutral-400);
   --tag-number-text: var(--neutral-0);
   --archive-bg: var(--neutral-600);
+  --dialog-close-border: var(--neutral-500);
 }
 
 *,

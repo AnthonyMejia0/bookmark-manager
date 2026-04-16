@@ -1,5 +1,5 @@
-import { Bookmark } from '@/types/bookmark';
-import { Tag } from '@/types/tag';
+import { Bookmark, BookmarkTag } from '@/types/bookmark';
+import { TagPost } from '@/types/tag';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 // export async function getTagCounts(sb: SupabaseClient, bookmarks: Bookmark[]) {
@@ -39,6 +39,11 @@ type BookmarkTagRow = {
   } | null;
 };
 
+type BookmarkTagEntry = {
+  bookmark_id: string;
+  tag_id: string;
+};
+
 export async function getTagCounts(sb: SupabaseClient, bookmarks: Bookmark[]) {
   if (!bookmarks.length) return [];
 
@@ -74,4 +79,42 @@ export async function getTagCounts(sb: SupabaseClient, bookmarks: Bookmark[]) {
   return Object.entries(counts)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export async function addTags(
+  sb: SupabaseClient,
+  tags: string[],
+  bookmarkId: string,
+) {
+  const addedBookmarkTags: BookmarkTag[] = [];
+
+  for (const tag of tags) {
+    const { data: createdTag, error: tagError } = await sb
+      .from('tags')
+      .upsert<TagPost>(
+        {
+          name: tag,
+        },
+        { onConflict: 'name' },
+      )
+      .select()
+      .single();
+
+    if (tagError || !createdTag) continue;
+
+    const { data: bookmarkTag, error: bookmarkTagError } = await sb
+      .from('bookmark_tags')
+      .insert<BookmarkTagEntry>({
+        bookmark_id: bookmarkId,
+        tag_id: createdTag.id,
+      })
+      .select()
+      .single();
+
+    if (bookmarkTagError || !bookmarkTag) continue;
+
+    addedBookmarkTags.push(bookmarkTag);
+  }
+
+  return addedBookmarkTags;
 }

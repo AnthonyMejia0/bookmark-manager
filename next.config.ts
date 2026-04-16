@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         hostname: 'www.google.com',
         pathname: '/s2/favicons/**',
       },
+      {
+        protocol: 'https',
+        hostname: 't1.gstatic.com',
+        pathname: '/faviconV2/**',
+      },
     ],
   },
 };

@@ -27,6 +27,7 @@ function Dashboard() {
     selectedTags,
     sortBy,
     setSortBy,
+    refetch,
   } = useBookmarks();
 
   useEffect(() => {
@@ -86,6 +87,7 @@ function Dashboard() {
           searchInput={searchInput}
           setSearchInput={setSearchInput}
           setSidebarOpen={setSidebarOpen}
+          refetch={refetch}
         />
         <div className={styles.mainSection}>
           <div className={styles.mainSectionTitle}>

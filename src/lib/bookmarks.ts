@@ -1,3 +1,4 @@
+import { BookmarkPost } from '@/types/bookmark';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 type BookmarkTags = {
@@ -25,12 +26,37 @@ export async function getBookmarks(sb: SupabaseClient) {
     return [];
   }
 
-  console.log('DATA =>', data);
-
   return (data ?? []).map((b) => ({
     ...b,
     tags: b.bookmark_tags
       .map((bt: BookmarkTags) => bt.tags?.name)
       .filter(Boolean),
   }));
+}
+
+export async function addBookmark(sb: SupabaseClient, bookmark: BookmarkPost) {
+  const { data: newBookmark, error } = await sb
+    .from('bookmarks')
+    .insert<BookmarkPost>({
+      title: bookmark.title,
+      url: bookmark.url,
+      favicon: bookmark.favicon,
+      description: bookmark.description,
+      user_id: bookmark.user_id,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.log('Error creating bookmark');
+    return {
+      data: null,
+      error,
+    };
+  }
+
+  return {
+    data: newBookmark,
+    error: null,
+  };
 }

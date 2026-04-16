@@ -14,25 +14,25 @@ export function useBookmarks() {
   const [sortBy, setSortBy] = useState<SortTypes>('recently added');
   const [loading, setLoading] = useState(true);
 
+  const fetchData = async () => {
+    console.log('Fetching data...');
+    try {
+      setLoading(true);
+
+      const bookmarksResponse = await fetch('/api/bookmarks');
+      const bookmarksData = await bookmarksResponse.json();
+
+      const tagsResponse = await fetch('/api/tags');
+      const tagsData = await tagsResponse.json();
+
+      setBookmarks(bookmarksData.bookmarks);
+      setTags(tagsData.tags);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      console.log('Fetch CALLED!!!!');
-      try {
-        setLoading(true);
-
-        const bookmarksResponse = await fetch('/api/bookmarks');
-        const bookmarksData = await bookmarksResponse.json();
-
-        const tagsResponse = await fetch('/api/tags');
-        const tagsData = await tagsResponse.json();
-
-        setBookmarks(bookmarksData.bookmarks);
-        setTags(tagsData.tags);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -76,18 +76,12 @@ export function useBookmarks() {
     return result;
   }, [bookmarks, selectedTags, sortBy, searchInput]);
 
-  // -------------------------
-  // TOGGLE TAG
-  // -------------------------
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
-  // -------------------------
-  // CLEAR FILTERS
-  // -------------------------
   const clearTags = () => setSelectedTags([]);
 
   return {
@@ -103,5 +97,6 @@ export function useBookmarks() {
     clearTags,
     filteredBookmarks,
     loading,
+    refetch: fetchData,
   };
 }
