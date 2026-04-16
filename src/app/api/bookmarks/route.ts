@@ -20,7 +20,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const supabase = await createSupabaseServerClient();
-  const { title, url, favicon, description } = await req.json();
+  const { title, url, favicon, description, tags } = await req.json();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
     favicon,
     description,
     user_id: user.id,
+    tags,
   };
 
   const { data: createdBookmark, error } = await addBookmark(

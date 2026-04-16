@@ -12,26 +12,14 @@ export async function getBookmarks(sb: SupabaseClient) {
     return [];
   }
 
-  const { data, error } = await sb.from('bookmarks').select(`
-      *,
-      bookmark_tags (
-        tags (
-          name
-        )
-      )
-    `);
+  const { data, error } = await sb.from('bookmarks').select(`*`);
 
   if (error) {
     console.error('Fetch bookmarks error:', error);
     return [];
   }
 
-  return (data ?? []).map((b) => ({
-    ...b,
-    tags: b.bookmark_tags
-      .map((bt: BookmarkTags) => bt.tags?.name)
-      .filter(Boolean),
-  }));
+  return data ?? [];
 }
 
 export async function addBookmark(sb: SupabaseClient, bookmark: BookmarkPost) {
@@ -43,6 +31,7 @@ export async function addBookmark(sb: SupabaseClient, bookmark: BookmarkPost) {
       favicon: bookmark.favicon,
       description: bookmark.description,
       user_id: bookmark.user_id,
+      tags: bookmark.tags,
     })
     .select()
     .single();

@@ -3,7 +3,6 @@
 import { Bookmark as BookmarkType } from '@/types/bookmark';
 import styles from './Bookmark.module.sass';
 import { Separator } from '../ui/separator';
-import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +25,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { getFaviconUrl } from '@/lib/utils';
 
 type BookmarkComponentProps = {
   bookmark: BookmarkType;
@@ -47,10 +47,8 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
         <div className={styles.bookmarkContainerTopHeader}>
           <div className={styles.bookmarkContainerTopHeaderIcon}>
             {bookmark?.url && (
-              <Image
-                src={`https://www.google.com/s2/favicons?domain=${
-                  new URL(bookmark?.url).hostname
-                }&sz=64`}
+              <img
+                src={getFaviconUrl(bookmark?.url)}
                 alt="Bookmark Icon"
                 height={28}
                 width={28}
@@ -201,9 +199,9 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
           </p>
         </div>
         <div className={styles.bookmarkContainerTopContentTags}>
-          {/* {bookmark?.tags.map((t, i) => (
+          {bookmark?.tags.map((t, i) => (
             <BookmarkTag key={i} label={t} />
-          ))} */}
+          ))}
         </div>
       </div>
       <Separator className={styles.divider} />
@@ -230,8 +228,19 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
   );
 }
 
+export function formatTag(tag: string): string {
+  return tag
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function BookmarkTag({ label }: { label: string }) {
-  return <div className={`text-preset-5 ${styles.tagContainer}`}>{label}</div>;
+  return (
+    <div className={`text-preset-5 ${styles.tagContainer}`}>
+      {formatTag(label)}
+    </div>
+  );
 }
 
 function Stat({
