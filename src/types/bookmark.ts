@@ -19,6 +19,7 @@ export type BookmarkPost = {
   favicon: string;
   description: string;
   user_id: string;
+  tags: string[];
 };
 
 export type BookmarkTag = {

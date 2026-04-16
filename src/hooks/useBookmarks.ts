@@ -14,6 +14,20 @@ export function useBookmarks() {
   const [sortBy, setSortBy] = useState<SortTypes>('recently added');
   const [loading, setLoading] = useState(true);
 
+  const fetchTags = (bookmarkData: Bookmark[]) => {
+    const tagCounts: Record<string, number> = {};
+
+    for (const b of bookmarkData) {
+      for (const t of b.tags) {
+        tagCounts[t] = (tagCounts[t] || 0) + 1;
+      }
+    }
+
+    return Object.entries(tagCounts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  };
+
   const fetchData = async () => {
     console.log('Fetching data...');
     try {
@@ -22,11 +36,10 @@ export function useBookmarks() {
       const bookmarksResponse = await fetch('/api/bookmarks');
       const bookmarksData = await bookmarksResponse.json();
 
-      const tagsResponse = await fetch('/api/tags');
-      const tagsData = await tagsResponse.json();
+      const tagsData = fetchTags(bookmarksData.bookmarks);
 
       setBookmarks(bookmarksData.bookmarks);
-      setTags(tagsData.tags);
+      setTags(tagsData);
     } finally {
       setLoading(false);
     }

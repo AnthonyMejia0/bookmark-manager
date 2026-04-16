@@ -41,6 +41,8 @@ import {
 } from '../ui/dialog';
 import axios from 'axios';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import { BookmarkPost } from '@/types/bookmark';
+import { getFaviconUrl, normalizeUrl } from '@/lib/utils';
 
 type NavBarProps = {
   searchInput: string;
@@ -57,7 +59,7 @@ function NavBar({
 }: NavBarProps) {
   const [user, setUser] = useState<User | null>(null);
   const [titleInput, setTitleInput] = useState('');
-  const [descInput, setDescInpute] = useState('');
+  const [descInput, setDescInput] = useState('');
   const [urlInput, setUrlInput] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -83,34 +85,19 @@ function NavBar({
     try {
       const { data: newBookmark } = await axios.post('/api/bookmarks', {
         title: titleInput,
-        url: urlInput,
-        favicon: `https://www.google.com/s2/favicons?domain=${
-          new URL(urlInput).hostname
-        }&sz=64`,
+        url: normalizeUrl(urlInput),
+        favicon: getFaviconUrl(urlInput),
         description: descInput,
-      });
-
+        tags: tags,
+      } as BookmarkPost);
       if (newBookmark.error) {
         console.log(newBookmark.error);
         return;
       }
-
-      if (tags.length > 0) {
-        const { data: newTags } = await axios.post('/api/tags', {
-          tags,
-          bookmarkId: newBookmark.data?.id,
-        });
-
-        if (newTags.error) {
-          console.log(newTags.error);
-        }
-      }
-
       setTitleInput('');
       setUrlInput('');
-      setDescInpute('');
+      setDescInput('');
       setTagsInput('');
-
       await refetch();
     } catch (error) {
       console.error('Failed to add bookmark:', error);
@@ -226,7 +213,7 @@ function NavBar({
                 className={`text-preset-4-md ${styles.dialogFormInput} ${styles.dialogFormInputArea}`}
                 maxLength={280}
                 value={descInput}
-                onChange={(e) => setDescInpute(e.target.value)}
+                onChange={(e) => setDescInput(e.target.value)}
                 required
               />
               <p className={`text-preset-5 ${styles.dialogFormCounter}`}>
