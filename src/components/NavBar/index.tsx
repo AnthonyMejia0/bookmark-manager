@@ -122,12 +122,6 @@ function NavBar({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className={styles.avatarButton}>
-            {/* <Image
-              src="/images/image-avatar.webp"
-              alt="User avatar"
-              height={40}
-              width={40}
-            /> */}
             <CircleUserRound height={40} width={40} />
           </button>
         </DropdownMenuTrigger>
@@ -136,12 +130,6 @@ function NavBar({
         >
           <DropdownMenuGroup>
             <div className={styles.userInfo}>
-              {/* <Image
-                src="/images/image-avatar.webp"
-                alt="User Avatar"
-                height={40}
-                width={40}
-              /> */}
               <CircleUserRound height={40} width={40} />
               <div className={styles.userInfoDetails}>
                 <p

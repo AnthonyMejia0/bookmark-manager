@@ -11,6 +11,8 @@ import Tag from '../Tag';
 type SideBarProps = {
   tags: TagType[];
   toggleTag: (tag: string) => void;
+  selectedTags: string[];
+  setSelectedTags: Dispatch<SetStateAction<string[]>>;
   showArchived: boolean;
   setShowArchived: Dispatch<SetStateAction<boolean>>;
   open: boolean;
@@ -20,9 +22,10 @@ type SideBarProps = {
 function SideBar({
   tags,
   toggleTag,
+  selectedTags,
+  setSelectedTags,
   showArchived,
   setShowArchived,
-  open,
   setOpen,
 }: SideBarProps) {
   const [mounted, setMounted] = useState(false);
@@ -89,10 +92,29 @@ function SideBar({
         </button>
       </div>
 
+      <div className={styles.sidebarNavTags}>
+        <p className={`text-preset-5 ${styles.sidebarTagsLabel}`}>Tags</p>
+        {selectedTags.length > 0 && (
+          <button
+            className={`text-preset-5 ${styles.sidebarTagsClear} ${
+              selectedTags.length === 0 && styles.sidebarTagsClearHide
+            }`}
+            onClick={() => setSelectedTags([])}
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
       <div className={styles.sidebarTags}>
         {Array.isArray(tags) &&
           tags?.map((tag, i) => (
-            <Tag key={i} tag={tag} toggleTag={toggleTag}></Tag>
+            <Tag
+              key={i}
+              tag={tag}
+              toggleTag={toggleTag}
+              selectedTags={selectedTags}
+            ></Tag>
           ))}
       </div>
     </div>

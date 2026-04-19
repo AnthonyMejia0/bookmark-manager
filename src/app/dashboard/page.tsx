@@ -24,6 +24,7 @@ function Dashboard() {
     tags,
     toggleTag,
     selectedTags,
+    setSelectedTags,
     sortBy,
     setSortBy,
     showArchived,
@@ -77,6 +78,8 @@ function Dashboard() {
         <SideBar
           tags={tags}
           toggleTag={toggleTag}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
           showArchived={showArchived}
           setShowArchived={setShowArchived}
           open={sidebarOpen}

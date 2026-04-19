@@ -9,10 +9,15 @@ import { useEffect, useState } from 'react';
 type TagProps = {
   tag: TagType;
   toggleTag: (tag: string) => void;
+  selectedTags: string[];
 };
 
-function Tag({ tag, toggleTag }: TagProps) {
-  const [checked, setChecked] = useState(false);
+function Tag({ tag, toggleTag, selectedTags }: TagProps) {
+  const [checked, setChecked] = useState(selectedTags.includes(tag.name));
+
+  useEffect(() => {
+    setChecked(selectedTags.includes(tag.name));
+  }, [selectedTags]);
 
   function formatTagName(tag: string) {
     return tag
@@ -22,7 +27,6 @@ function Tag({ tag, toggleTag }: TagProps) {
   }
 
   const handleChecked = () => {
-    setChecked(!checked);
     toggleTag(tag.name);
   };
 
