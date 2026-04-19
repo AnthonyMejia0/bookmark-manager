@@ -41,8 +41,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://github.com/AnthonyMejia0/bookmark-manager)
-- Live Site URL: [Add live site URL here](https://bookmarks.anthonymejia.dev/)
+- Solution URL: [GitHub Repo](https://github.com/AnthonyMejia0/bookmark-manager)
+- Live Site URL: [Bookmark Manager](https://bookmarks.anthonymejia.dev/)
 
 ## My process
 
