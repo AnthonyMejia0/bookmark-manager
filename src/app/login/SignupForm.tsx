@@ -2,7 +2,6 @@ import { useTheme } from 'next-themes';
 import styles from './Login.module.sass';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getSupabaseBrowserClient } from '@/lib/supabase/browser-client';
 import { Spinner } from '@/components/ui/spinner';
 
 type SignupFormProps = {

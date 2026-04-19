@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 
 type ResetFormProps = {
-  onSubmit: (email: string) => Promise<void>;
+  onSubmit: (email: string) => Promise<boolean>;
   setMode: Dispatch<SetStateAction<'login' | 'signup' | 'reset'>>;
   loading: boolean;
   error: null | string;
@@ -15,10 +15,14 @@ function ResetForm({ onSubmit, setMode, loading, error }: ResetFormProps) {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [emailInput, setEmailInput] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    onSubmit(emailInput);
+    const successful = await onSubmit(emailInput);
+    if (successful) {
+      setEmailSent(true);
+    }
   };
 
   useEffect(() => {
@@ -59,17 +63,31 @@ function ResetForm({ onSubmit, setMode, loading, error }: ResetFormProps) {
           className={styles.formInput}
           disabled={loading}
         />
-        <button
-          type="submit"
-          className={`text-preset-3 ${styles.formButton}`}
-          disabled={loading}
-        >
-          {loading ? (
-            <Spinner height={20} width={20} className={styles.loadingSpinner} />
-          ) : (
-            'Send reset link'
-          )}
-        </button>
+        {emailSent ? (
+          <button
+            type="submit"
+            className={`text-preset-3 ${styles.formButton} ${styles.emailSent}`}
+            disabled
+          >
+            Email sent
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className={`text-preset-3 ${styles.formButton}`}
+            disabled={loading}
+          >
+            {loading ? (
+              <Spinner
+                height={20}
+                width={20}
+                className={styles.loadingSpinner}
+              />
+            ) : (
+              'Send reset link'
+            )}
+          </button>
+        )}
         <button
           onClick={() => setMode('login')}
           className={`text-preset-4 ${styles.formLinksButton} ${styles.backToLogin}`}

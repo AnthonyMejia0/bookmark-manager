@@ -34,6 +34,7 @@
   --toast-bg: var(--neutral-0);
   --toast-border: var(--neutral-300);
   --form-error: var(--red-800);
+  --email-sent: var(--neutral-500);
 }
 
 [data-theme='dark'] {
@@ -65,6 +66,7 @@
   --toast-bg: var(--neutral-500);
   --toast-border: var(--neutral-400);
   --form-error: var(--red-600);
+  --email-sent: var(--neutral-600);
 }
 
 *,

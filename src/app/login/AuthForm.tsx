@@ -87,13 +87,14 @@ function AuthForm() {
         icon: <MailWarning height={20} width={20} className="toastIcon" />,
       });
       setLoading(false);
-      return;
+      return false;
     }
 
     toast.success('Password reset email sent', {
       icon: <Send height={20} width={20} className="toastIcon" />,
     });
     setLoading(false);
+    return true;
   };
 
   switch (mode) {
