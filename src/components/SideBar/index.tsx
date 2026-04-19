@@ -65,7 +65,10 @@ function SideBar({
           className={`text-preset-3 ${styles.sidebarButton} ${
             !showArchived && styles.sidebarButtonActive
           }`}
-          onClick={() => setShowArchived(false)}
+          onClick={() => {
+            setShowArchived(false);
+            setOpen(false);
+          }}
           disabled={!showArchived}
         >
           <House height={20} width={20} className={styles.sidebarIcon} />
@@ -75,7 +78,10 @@ function SideBar({
           className={`text-preset-3 ${styles.sidebarButton} ${
             showArchived && styles.sidebarButtonActive
           }`}
-          onClick={() => setShowArchived(true)}
+          onClick={() => {
+            setShowArchived(true);
+            setOpen(false);
+          }}
           disabled={showArchived}
         >
           <Archive height={20} width={20} className={styles.sidebarIcon} />

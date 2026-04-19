@@ -3,6 +3,7 @@ import styles from './Login.module.sass';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser-client';
+import { Spinner } from '@/components/ui/spinner';
 
 type SignupFormProps = {
   onSubmit: (name: string, email: string, password: string) => Promise<void>;
@@ -27,8 +28,14 @@ function SignupForm({ onSubmit, setMode, loading, error }: SignupFormProps) {
 
     const emailValue = e.target.elements.namedItem('email') as HTMLInputElement;
 
-    if (!emailValue.checkValidity()) setEmailError(true);
-    if (passwordInput.length < 8) setPasswordError(true);
+    if (!emailValue.checkValidity()) {
+      setEmailError(true);
+      return;
+    }
+    if (passwordInput.length < 8) {
+      setPasswordError(true);
+      return;
+    }
 
     onSubmit(nameInput, emailInput, passwordInput);
   };
@@ -46,13 +53,7 @@ function SignupForm({ onSubmit, setMode, loading, error }: SignupFormProps) {
 
   return (
     <div className={`${styles.loginContainer}`}>
-      <Image
-        src={logoPath}
-        alt="Logo"
-        width={214}
-        height={32}
-        loading="eager"
-      />
+      <Image src={logoPath} alt="Logo" width={214} height={32} />
       <p className={`text-preset-1 ${styles.header}`}>Create your account</p>
       <p className={`text-preset-4-md ${styles.subheader}`}>
         Join us and start saving your favorite links — organized, searchable,
@@ -118,7 +119,11 @@ function SignupForm({ onSubmit, setMode, loading, error }: SignupFormProps) {
           className={`text-preset-3 ${styles.formButton}`}
           disabled={loading}
         >
-          Create account
+          {loading ? (
+            <Spinner height={20} width={20} className={styles.loadingSpinner} />
+          ) : (
+            'Create account'
+          )}
         </button>
         <p className={`text-preset-4-md ${styles.formLinks}`}>
           Already have an account?{' '}

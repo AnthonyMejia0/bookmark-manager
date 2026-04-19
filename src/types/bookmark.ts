@@ -26,3 +26,14 @@ export type BookmarkTag = {
   bookmark_id: string;
   tag_id: string;
 };
+
+export type BookmarkPut = {
+  id: string;
+  title?: string;
+  url?: string;
+  description?: string;
+  tags?: string[];
+  pin?: boolean;
+  archive?: boolean;
+  visit_count?: number;
+};

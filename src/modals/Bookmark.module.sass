@@ -1,0 +1,126 @@
+@use '@/styles/_mixins' as *
+
+.dialog
+    background-color: var(--nav-bg)
+    border-radius: 16px
+    padding: 24px 20px
+    max-width: 343px
+    min-width: min(100%, 343px)
+
+    +tablet
+        max-width: 570px
+        padding: 32px
+
+    &Title
+        color: var(--primary-text-color)
+
+    &Description
+        color: var(--secondary-text-color)
+        margin-top: 10px
+
+    &Form
+        display: flex
+        flex-direction: column
+        width: 100%
+
+        &Label
+            color: var(--primary-text-color)
+            margin-top: 20px
+
+            &Star
+                color: var(--focus-outline)
+
+        &Input
+            background-color: var(--form-bg)
+            border: 1px solid var(--form-border)
+            border-radius: 8px
+            color: var(--secondary-text-color)
+            margin-top: 6px
+            padding: 12px
+            width: 100%
+
+            &:focus
+                outline: none
+
+            &::placeholder
+                color: var(--secondary-text-color)
+
+            &Area
+                height: 91px
+                resize: none
+
+        &Counter
+            margin-top: 6px
+            text-align: right
+
+        &Buttons
+            display: flex
+            flex-direction: row
+            gap: 16px
+            justify-content: space-between
+            margin-top: 32px
+            margin-inline: 0
+            width: 100%
+
+            +tablet
+                justify-content: flex-end
+                margin-left: auto
+
+            &Confirm
+                margin-top: 0px
+
+            &Cancel
+                background-color: var(--nav-bg)
+                border: 1px solid var(--neutral-400)
+                border-radius: 8px
+                cursor: pointer
+                height: 46px
+                padding-inline: 16px
+                width: 145px
+
+                +tablet
+                    width: 90px
+
+                &Confirm
+                    width: 90px
+
+            &Add
+                background-color: var(--teal-700)
+                border: 1px solid var(--form-border)
+                border-radius: 8px
+                color: white
+                cursor: pointer
+                height: 46px
+                padding-inline: 16px
+                white-space: nowrap
+                width: 145px
+
+                &Confirm
+                    width: min-content
+
+                    &Delete
+                        background-color: var(--red-800)
+                        border-color: var(--red-600)
+
+.tagSuggestions
+    position: relative
+    width: 100%
+
+.suggestions
+    background-color: var(--form-bg)
+    border: 1px solid var(--form-border)
+    border-radius: 8px
+    left: 0
+    margin-top: 4px
+    position: absolute
+    top: 100%
+    width: 100%
+    z-index: 20
+
+    &Item
+        border-radius: 8px
+        cursor: pointer
+        padding: 6px 12px
+
+        &:hover
+            background: var(--form-bg-hover)

@@ -12,6 +12,7 @@ export function useBookmarks() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [sortBy, setSortBy] = useState<SortTypes>('recently added');
+  const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchTags = (bookmarkData: Bookmark[]) => {
@@ -52,6 +53,12 @@ export function useBookmarks() {
   const filteredBookmarks = useMemo(() => {
     let result = [...bookmarks];
 
+    if (showArchived) {
+      result = result.filter((b) => b.archived);
+    } else {
+      result = result.filter((b) => !b.archived);
+    }
+
     if (selectedTags.length > 0 && !searchInput) {
       result = result.filter((b) =>
         b.tags.some((tag) => selectedTags.includes(tag)),
@@ -65,29 +72,33 @@ export function useBookmarks() {
       });
     }
 
-    switch (sortBy) {
-      case 'recently added':
-        result.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        );
-        break;
+    result.sort((a, b) => {
+      if (a.pinned !== b.pinned) {
+        return a.pinned ? -1 : 1;
+      }
 
-      case 'recently visited':
-        result.sort(
-          (a, b) =>
+      switch (sortBy) {
+        case 'recently added':
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+
+        case 'recently visited':
+          return (
             new Date(b.last_visited ?? 0).getTime() -
-            new Date(a.last_visited ?? 0).getTime(),
-        );
-        break;
+            new Date(a.last_visited ?? 0).getTime()
+          );
 
-      case 'most visited':
-        result.sort((a, b) => (b.visit_count ?? 0) - (a.visit_count ?? 0));
-        break;
-    }
+        case 'most visited':
+          return (b.visit_count ?? 0) - (a.visit_count ?? 0);
+
+        default:
+          return 0;
+      }
+    });
 
     return result;
-  }, [bookmarks, selectedTags, sortBy, searchInput]);
+  }, [bookmarks, selectedTags, sortBy, searchInput, showArchived]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -106,6 +117,8 @@ export function useBookmarks() {
     setSearchInput,
     sortBy,
     setSortBy,
+    showArchived,
+    setShowArchived,
     toggleTag,
     clearTags,
     filteredBookmarks,

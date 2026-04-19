@@ -4,6 +4,7 @@ import './globals.css';
 import '../styles/_typography.sass';
 import { ThemeProvider } from 'next-themes';
 import { cn } from '@/lib/utils';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,6 +33,11 @@ export default function RootLayout({
       <body>
         <ThemeProvider enableSystem={false} defaultTheme="light">
           {children}
+          <Toaster
+            position="top-right"
+            closeButton={true}
+            style={{ top: 90 }}
+          />
         </ThemeProvider>
       </body>
     </html>

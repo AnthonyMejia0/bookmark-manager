@@ -9,7 +9,7 @@
     width: 100%
 
 .loginContainer
-    background-color: var(--neutral-0)
+    background-color: var(--nav-bg)
     border-radius: 12px
     display: flex
     flex-direction: column
@@ -50,10 +50,10 @@
     width: 100%
 
     &Error
-        outline: solid var(--form-error)
-        outline-offset: 2px
+        outline: solid var(--form-error) !important
+        outline-offset: 2px !important
 
-    &:focus
+    &:focus-visible
         outline: solid var(--focus-outline)
         outline-offset: 2px
 
@@ -62,18 +62,22 @@
         border-color: var(--form-border-hover)
 
 .formButton
+    align-items: center
     background-color: var(--teal-700)
     border: none
     border-radius: 8px
     color: var(--neutral-0)
     cursor: pointer
+    display: flex
+    justify-content: center
+    height: 46px
     margin-bottom: 20px
     margin-top: 16px
     padding: 12px 0
     text-align: center
     width: 100%
 
-    &:focus
+    &:focus-visible
         outline: solid var(--focus-outline)
         outline-offset: 2px
 
@@ -94,7 +98,7 @@
     margin-left: 6px
     padding: 0
 
-    &:focus
+    &:focus-visible
         outline: solid var(--focus-outline)
         outline-offset: 2px
 
@@ -107,3 +111,17 @@
         
 .backToLogin
     text-align: center
+
+.loadingSpinner
+    color: var(--neutral-0)
+
+.confirmEmailContainer
+    align-items: center
+    display: flex
+    justify-content: center
+    min-height: 100vh
+    width: 100%
+
+.mismatch
+    color: var(--form-error) !important
+    margin-top: 6px !important

@@ -3,6 +3,7 @@ import styles from './Login.module.sass';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser-client';
+import { Spinner } from '@/components/ui/spinner';
 
 type LoginFormProps = {
   onSubmit: (email: string, password: string) => Promise<void>;
@@ -83,7 +84,11 @@ function LoginForm({ onSubmit, setMode, loading, error }: LoginFormProps) {
           className={`text-preset-3 ${styles.formButton}`}
           disabled={loading}
         >
-          Log in
+          {loading ? (
+            <Spinner height={20} width={20} className={styles.loadingSpinner} />
+          ) : (
+            'Log in'
+          )}
         </button>
         <p className={`text-preset-4-md ${styles.formLinks}`}>
           Forgot password?{' '}

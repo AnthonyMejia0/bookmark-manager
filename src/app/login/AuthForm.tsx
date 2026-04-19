@@ -7,6 +7,10 @@ import SignupForm from './SignupForm';
 import ResetForm from './ResetForm';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { MailWarning, Send, UserRoundX } from 'lucide-react';
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 type AuthMode = 'login' | 'signup' | 'reset';
 
@@ -22,13 +26,16 @@ function AuthForm() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      setError(error.message);
+    if (signInError) {
+      setError(signInError.message);
+      toast('User not found.', {
+        icon: <UserRoundX height={20} width={20} className="toastIcon" />,
+      });
     } else {
       router.push('/dashboard');
     }
@@ -44,19 +51,22 @@ function AuthForm() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           name,
         },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${BASE_URL}/dashboard`,
       },
     });
 
-    if (error) {
-      setError(error.message);
+    if (signUpError) {
+      setError(signUpError.message);
+      toast('Error creating user.', {
+        icon: <UserRoundX height={20} width={20} className="toastIcon" />,
+      });
     } else {
       router.push('/dashboard');
     }
@@ -64,7 +74,27 @@ function AuthForm() {
     setLoading(false);
   };
 
-  const handleReset = async () => {};
+  const handleReset = async (email: string) => {
+    setLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${BASE_URL}/reset-password`,
+    });
+
+    if (error) {
+      console.log(error.message);
+      toast('Failed to send reset email.', {
+        icon: <MailWarning height={20} width={20} className="toastIcon" />,
+      });
+      setLoading(false);
+      return;
+    }
+
+    toast.success('Password reset email sent', {
+      icon: <Send height={20} width={20} className="toastIcon" />,
+    });
+    setLoading(false);
+  };
 
   switch (mode) {
     case 'login':

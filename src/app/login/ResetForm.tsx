@@ -1,16 +1,11 @@
 import { useTheme } from 'next-themes';
 import styles from './Login.module.sass';
 import Image from 'next/image';
-import {
-  Dispatch,
-  ReactEventHandler,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
 
 type ResetFormProps = {
-  onSubmit: () => Promise<void>;
+  onSubmit: (email: string) => Promise<void>;
   setMode: Dispatch<SetStateAction<'login' | 'signup' | 'reset'>>;
   loading: boolean;
   error: null | string;
@@ -23,7 +18,7 @@ function ResetForm({ onSubmit, setMode, loading, error }: ResetFormProps) {
 
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    onSubmit();
+    onSubmit(emailInput);
   };
 
   useEffect(() => {
@@ -69,7 +64,11 @@ function ResetForm({ onSubmit, setMode, loading, error }: ResetFormProps) {
           className={`text-preset-3 ${styles.formButton}`}
           disabled={loading}
         >
-          Send reset link
+          {loading ? (
+            <Spinner height={20} width={20} className={styles.loadingSpinner} />
+          ) : (
+            'Send reset link'
+          )}
         </button>
         <button
           onClick={() => setMode('login')}

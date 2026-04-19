@@ -82,6 +82,7 @@
         justify-content: space-between
         height: max-content
         overflow: hidden
+        padding-bottom: 8px
         width: 100%
 
     &Header
@@ -124,14 +125,18 @@
 
     &Bookmarks
         display: grid
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+        grid-template-columns: repeat(auto-fit, 300px)
         gap: 32px
         flex: 1
+        justify-content: center
+        justify-items: center
         min-height: 0
         overflow-y: auto
         padding: 20px 0
         width: 100%
-        justify-items: start
+
+        +tablet
+            justify-content: flex-start
 
 .menu
     background-color: var(--nav-bg)

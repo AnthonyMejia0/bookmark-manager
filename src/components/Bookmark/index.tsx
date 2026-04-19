@@ -1,6 +1,6 @@
 'use client';
 
-import { Bookmark as BookmarkType } from '@/types/bookmark';
+import { BookmarkPut, Bookmark as BookmarkType } from '@/types/bookmark';
 import styles from './Bookmark.module.sass';
 import { Separator } from '../ui/separator';
 import {
@@ -19,19 +19,32 @@ import {
   Eye,
   LucideIcon,
   Pin,
+  PinOff,
   RotateCcw,
   SquareArrowOutUpRight,
   SquarePen,
   Trash2,
+  Unlink,
 } from 'lucide-react';
 import Link from 'next/link';
 import { getFaviconUrl } from '@/lib/utils';
+import axios from 'axios';
+import { toast } from 'sonner';
+import EditBookmark from '@/modals/EditBookmark';
+import { useState } from 'react';
+import Confirm from '@/modals/Confirm';
 
 type BookmarkComponentProps = {
   bookmark: BookmarkType;
+  refetch: () => Promise<void>;
 };
 
-function Bookmark({ bookmark }: BookmarkComponentProps) {
+function Bookmark({ bookmark, refetch }: BookmarkComponentProps) {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [openConfirmArchive, setOpenConfirmArchive] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const formatDate = (date: string | null) => {
     if (!date) return 'Never';
 
@@ -41,8 +54,140 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
     });
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(bookmark?.url);
+      toast('Link copied to clipboard.', {
+        icon: <Copy height={20} width={20} className="toastIcon" />,
+      });
+    } catch {
+      toast('Failed to copy link.', {
+        icon: <Unlink height={20} width={20} className="toastIcon" />,
+      });
+    }
+  };
+
+  const handleVisit = async () => {
+    try {
+      await axios.put('/api/bookmarks', {
+        id: bookmark.id,
+        visit_count: bookmark.visit_count + 1,
+      } as BookmarkPut);
+
+      refetch();
+    } catch (error) {
+      console.log('Error updating bookmark: ', error);
+    }
+  };
+
+  const togglePin = async () => {
+    try {
+      const wasPinned = bookmark.pinned;
+
+      await axios.put('/api/bookmarks', {
+        id: bookmark.id,
+        pin: !bookmark.pinned,
+      } as BookmarkPut);
+
+      refetch();
+
+      if (wasPinned) {
+        toast('Bookmark unpinned.', {
+          icon: <PinOff height={20} width={20} className="toastIcon" />,
+        });
+      } else {
+        toast('Bookmark pinned to top.', {
+          icon: <Pin height={20} width={20} className="toastIcon" />,
+        });
+      }
+    } catch (error) {
+      console.log('Error updating bookmark: ', error);
+    }
+  };
+
+  const toggleArchive = async () => {
+    setLoading(true);
+
+    try {
+      const wasArchived = bookmark.archived;
+
+      await axios.put('/api/bookmarks', {
+        id: bookmark.id,
+        archive: !bookmark.archived,
+        pin: !wasArchived ? false : bookmark.pinned,
+      } as BookmarkPut);
+
+      refetch();
+
+      if (wasArchived) {
+        toast('Bookmark restored.', {
+          icon: <RotateCcw height={20} width={20} className="toastIcon" />,
+        });
+      } else {
+        toast('Bookmark archived.', {
+          icon: <Archive height={20} width={20} className="toastIcon" />,
+        });
+      }
+    } catch (error) {
+      console.log('Error updating bookmark: ', error);
+    } finally {
+      setLoading(false);
+      setOpenConfirmArchive(false);
+    }
+  };
+
+  const deleteBookmark = async () => {
+    setLoading(true);
+
+    try {
+      await axios.delete(`/api/bookmarks/${bookmark.id}`);
+
+      refetch();
+
+      toast('Bookmark deleted.', {
+        icon: <Trash2 height={20} width={20} className="toastIcon" />,
+      });
+    } catch (error) {
+      console.log('Error deleting bookmark: ', error);
+    } finally {
+      setLoading(false);
+      setOpenConfirmDelete(false);
+    }
+  };
+
   return (
     <div className={styles.bookmarkContainer}>
+      <EditBookmark
+        key={bookmark.id}
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
+        bookmark={bookmark}
+        refetch={refetch}
+      />
+      <Confirm
+        open={openConfirmDelete}
+        setOpen={setOpenConfirmDelete}
+        loading={loading}
+        title="Delete bookmark"
+        description="Are you sure you want to delete this bookmark?"
+        confirmationText="Delete permanently"
+        isDelete
+        onConfirm={deleteBookmark}
+      />
+      <Confirm
+        open={openConfirmArchive}
+        setOpen={setOpenConfirmArchive}
+        loading={loading}
+        title={bookmark.archived ? 'Unarchive bookmark' : 'Archive bookmark'}
+        description={
+          bookmark.archived
+            ? 'Move this bookmark back to your active list?'
+            : 'Are you sure you want to archive this bookmark?'
+        }
+        confirmationText={bookmark.archived ? 'Unarchive' : 'Archive'}
+        onConfirm={toggleArchive}
+      />
+
       <div className={styles.bookmarkContainerTop}>
         <div className={styles.bookmarkContainerTopHeader}>
           <div className={styles.bookmarkContainerTopHeaderIcon}>
@@ -55,7 +200,12 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
               />
             )}
           </div>
-          <div className={styles.bookmarkContainerTopHeaderDetails}>
+          <Link
+            href={bookmark?.url}
+            onClick={handleVisit}
+            target="_blank"
+            className={styles.bookmarkContainerTopHeaderDetails}
+          >
             <p
               className={`text-preset-2 ${styles.bookmarkContainerTopHeaderDetailsTitle}`}
             >
@@ -64,14 +214,11 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
             {bookmark?.url && (
               <p
                 className={`text-preset-5 ${styles.bookmarkContainerTopHeaderDetailsUrl}`}
-                // TODO - Handle updating visitCount and lastVisited
-                onClick={() => console.log('link clicked')}
               >
-                {/* {bookmark?.url.replace(/^https?:\/\//, '')} */}
                 {new URL(bookmark?.url).hostname}
               </p>
             )}
-          </div>
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -94,7 +241,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                   <Link
                     href={bookmark?.url}
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={handleVisit}
                     target="_blank"
                   >
                     <SquareArrowOutUpRight
@@ -107,9 +254,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={`text-preset-4 ${styles.menuOption}`}
-                  onClick={() => {
-                    navigator.clipboard.writeText(bookmark?.url);
-                  }}
+                  onClick={copyToClipboard}
                 >
                   <Copy
                     height={16}
@@ -121,7 +266,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={togglePin}
                   >
                     <Pin
                       height={16}
@@ -137,7 +282,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={() => setOpenEdit(true)}
                   >
                     <SquarePen
                       height={16}
@@ -150,7 +295,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 {!bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={() => setOpenConfirmArchive(true)}
                   >
                     <Archive
                       height={16}
@@ -163,7 +308,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 {bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={() => setOpenConfirmArchive(true)}
                   >
                     <RotateCcw
                       height={16}
@@ -176,7 +321,7 @@ function Bookmark({ bookmark }: BookmarkComponentProps) {
                 {bookmark?.archived && (
                   <DropdownMenuItem
                     className={`text-preset-4 ${styles.menuOption}`}
-                    onClick={() => {}}
+                    onClick={() => setOpenConfirmDelete(true)}
                   >
                     <Trash2
                       height={16}

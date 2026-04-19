@@ -16,7 +16,6 @@ import { ArrowUpDown, Check } from 'lucide-react';
 import Bookmark from '@/components/Bookmark';
 
 function Dashboard() {
-  const [showArchived, setShowArchived] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const {
     filteredBookmarks,
@@ -27,6 +26,8 @@ function Dashboard() {
     selectedTags,
     sortBy,
     setSortBy,
+    showArchived,
+    setShowArchived,
     refetch,
   } = useBookmarks();
 
@@ -148,7 +149,7 @@ function Dashboard() {
           <main className={styles.mainSectionBookmarks}>
             {Array.isArray(filteredBookmarks) &&
               filteredBookmarks?.map((bookmark, i) => (
-                <Bookmark key={i} bookmark={bookmark} />
+                <Bookmark key={i} bookmark={bookmark} refetch={refetch} />
               ))}
           </main>
         </div>
